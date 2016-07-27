@@ -15,6 +15,7 @@ import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
+    private EarthquakeAdapter mAdapter;
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
     private static final String QUERY_URL = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
@@ -23,24 +24,18 @@ public class EarthquakeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        MyNetworkTask task = new MyNetworkTask();
-        task.execute(QUERY_URL);
-
-    }
-    private void updateUi(List<Earthquake> earthquakes){
-
-        final EarthquakeAdapter earthquakeAdapter = new EarthquakeAdapter(this, earthquakes);
-
         ListView listView = (ListView) findViewById(R.id.list);
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        listView.setAdapter(earthquakeAdapter);
+
+        mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
+        listView.setAdapter(mAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // Find the current earthquake that was clicked on
-                Earthquake currentEarthquake = earthquakeAdapter.getItem(position);
+                Earthquake currentEarthquake = mAdapter.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
                 Uri earthquakeUri = Uri.parse(currentEarthquake.getUrl());
@@ -53,7 +48,12 @@ public class EarthquakeActivity extends AppCompatActivity {
             }
         });
 
+
+        MyNetworkTask task = new MyNetworkTask();
+        task.execute(QUERY_URL);
+
     }
+
     private class MyNetworkTask extends AsyncTask<String, Void, List<Earthquake>>{
         @Override
         protected List<Earthquake> doInBackground(String... strings) {
@@ -66,10 +66,10 @@ public class EarthquakeActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Earthquake> earthquakes) {
-            if (earthquakes == null){
-                return;
+            mAdapter.clear();
+            if (earthquakes != null && !earthquakes.isEmpty()){
+                mAdapter.addAll(earthquakes);
             }
-            updateUi(earthquakes);
         }
     }
 }
