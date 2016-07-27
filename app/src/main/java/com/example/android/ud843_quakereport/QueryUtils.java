@@ -27,7 +27,6 @@ public final class QueryUtils {
     public static final String LOG_TAG = QueryUtils.class.getName();
 
 
-    private static final String QUERY_URL = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
 
     private QueryUtils() {

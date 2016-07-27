@@ -57,7 +57,7 @@ public class EarthquakeActivity extends AppCompatActivity {
     private class MyNetworkTask extends AsyncTask<String, Void, List<Earthquake>>{
         @Override
         protected List<Earthquake> doInBackground(String... strings) {
-            if (strings.length <1 || strings[0] == null){
+            if (strings.length == 0 || strings[0] == null){
                 return null;
             }
             List<Earthquake> earthquakes = QueryUtils.fetchEarthquakeData(strings[0]);
