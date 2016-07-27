@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 public class EarthquakeActivity extends AppCompatActivity implements android.app.LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
     private EarthquakeAdapter mAdapter;
+    private TextView mEmptyTextView;
     private static final int EARTHQUAKE_LOADER_ID = 1;
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
     public static final String QUERY_URL = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
@@ -37,9 +41,11 @@ public class EarthquakeActivity extends AppCompatActivity implements android.app
         ListView listView = (ListView) findViewById(R.id.list);
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
+        mEmptyTextView = (TextView)findViewById(R.id.empty_view);
 
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
         listView.setAdapter(mAdapter);
+        listView.setEmptyView(mEmptyTextView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,6 +75,7 @@ public class EarthquakeActivity extends AppCompatActivity implements android.app
     @Override
     public void onLoadFinished(android.content.Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
         mAdapter.clear();
+        mEmptyTextView.setText(R.string.no_result);
         if (earthquakes != null && !earthquakes.isEmpty()){
             mAdapter.addAll(earthquakes);
         }
