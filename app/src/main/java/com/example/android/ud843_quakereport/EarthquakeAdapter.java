@@ -18,13 +18,14 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by OWNER on 7/21/2016.
  */
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
-    public EarthquakeAdapter(Activity context, ArrayList<Earthquake> earthquakes){
+    public EarthquakeAdapter(Activity context, List<Earthquake> earthquakes){
         super(context,0,earthquakes);
     }
 
